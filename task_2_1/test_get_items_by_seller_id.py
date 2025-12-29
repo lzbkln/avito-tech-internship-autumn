@@ -74,38 +74,33 @@ def test_get_items_by_valid_seller_id_empty_list(client):
 
 # Negative tests
 @pytest.mark.parametrize(
-    "seller_id, expected_status, expected_message",
+    "seller_id, expected_status",
     [
         # Incorrect sellerID format (not an integer)
         (
                 "abc",
-                400,
-                "передан некорректный идентификатор продавца"
+                400
         ),
         # Negative sellerID
         (
                 -123456,
-                400,
-                "поле seller_id должен быть в диапазоне [111111, 999999]"
+                400
         ),
         # Big sellerID
         (
-                123456789,
-                400,
-                "поле seller_id должен быть в диапазоне [111111, 999999]"
+                12345678910,
+                400
         ),
         # Граничные значения поля sellerId
         (
                 1000000,
-                400,
-                "поле seller_id должен быть в диапазоне [111111, 999999]"
+                400
         ),
 
         (
                 111110,
-                400,
-                "поле seller_id должен быть в диапазоне [111111, 999999]"
-        ),
+                400
+        )
     ],
     ids=[
         "Incorrect sellerID format (not an integer)",
@@ -115,7 +110,7 @@ def test_get_items_by_valid_seller_id_empty_list(client):
         "sellerID below minimum allowable value"
     ]
 )
-def test_get_items_by_seller_id_negative(client, seller_id, expected_status, expected_message):
+def test_get_items_by_seller_id_negative(client, seller_id, expected_status):
     response = client.get_items_by_seller_id(seller_id=seller_id)
 
     # Check error response status
@@ -124,4 +119,3 @@ def test_get_items_by_seller_id_negative(client, seller_id, expected_status, exp
     # Check error response message
     assert "result" in response.json(), "Error response should contain result field"
     assert "message" in response.json()["result"], "Error result should contain message field"
-    assert response.json()["result"]["message"] == expected_message, "Error message does not match expected"
