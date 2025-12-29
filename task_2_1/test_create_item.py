@@ -98,7 +98,7 @@ def test_create_item_positive(
 
 
 @pytest.mark.parametrize(
-    "seller_id, name, price, statistics, expected_status, expected_response",
+    "seller_id, name, price, statistics, expected_status",
     [
         # Проверка граничных значений поля sellerID
         (
@@ -106,28 +106,14 @@ def test_create_item_positive(
                 "iPhone",
                 40000,
                 {"contacts": 1, "likes": 2, "viewCount": 5},
-                400,
-                {
-                    "result": {
-                        "message": "поле seller_id должен быть в диапазоне [111111, 999999]",
-                        "messages": {}
-                    },
-                    "status": "400"
-                }
+                400
         ),
         (
                 1000000,
                 "iPhone",
                 40000,
                 {"contacts": 1, "likes": 2, "viewCount": 5},
-                400,
-                {
-                    "result": {
-                        "message": "поле seller_id должен быть в диапазоне [111111, 999999]",
-                        "messages": {}
-                    },
-                    "status": "400"
-                }
+                400
         ),
         # Проверка строкового представления поля sellerID
         (
@@ -135,14 +121,7 @@ def test_create_item_positive(
                 "iPhone",
                 40000,
                 {"contacts": 1, "likes": 2, "viewCount": 5},
-                400,
-                {
-                    "result": {
-                        "message": "поле seller_id должен быть в диапазоне [111111, 999999]",
-                        "messages": {}
-                    },
-                    "status": "400"
-                }
+                400
         ),
         # Негативное значение поля price
         (
@@ -150,14 +129,7 @@ def test_create_item_positive(
                 "iPhone",
                 -40000,
                 {"contacts": 1, "likes": 2, "viewCount": 5},
-                400,
-                {
-                    "result": {
-                        "message": "поле price >= 0",
-                        "messages": {}
-                    },
-                    "status": "400"
-                }
+                400
         ),
         # Негативное значение поля contacts
         (
@@ -165,14 +137,7 @@ def test_create_item_positive(
                 "iPhone",
                 40000,
                 {"contacts": -10, "likes": 2, "viewCount": 5},
-                400,
-                {
-                    "result": {
-                        "message": "поле contacts >= 0",
-                        "messages": {}
-                    },
-                    "status": "400"
-                }
+                400
         ),
         # Негативное значение поля likes
         (
@@ -180,14 +145,7 @@ def test_create_item_positive(
                 "iPhone",
                 40000,
                 {"contacts": 1, "likes": -35, "viewCount": 5},
-                400,
-                {
-                    "result": {
-                        "message": "поле likes >= 0",
-                        "messages": {}
-                    },
-                    "status": "400"
-                }
+                400
         ),
         # Негативное значение поля viewCount
         (
@@ -195,14 +153,7 @@ def test_create_item_positive(
                 "iPhone",
                 40000,
                 {"contacts": 1, "likes": 2, "viewCount": -5},
-                400,
-                {
-                    "result": {
-                        "message": "поле viewCount >= 0",
-                        "messages": {}
-                    },
-                    "status": "400"
-                }
+                400
         ),
         # Нулевое значение поля viewCount (т.к поле likes > 0 и contacts > 0, то viewCount > 0) (business logic)
         (
@@ -210,14 +161,7 @@ def test_create_item_positive(
                 "iPhone",
                 40000,
                 {"contacts": 10, "likes": 2, "viewCount": 0},
-                400,
-                {
-                    "result": {
-                        "message": "Если likes > 0 и contacts > 0, то viewCount > 0",
-                        "messages": {}
-                    },
-                    "status": "400"
-                }
+                400
         ),
         # Поле viewCount <= likes (business logic)
         (
@@ -225,14 +169,7 @@ def test_create_item_positive(
                 "iPhone",
                 40000,
                 {"contacts": 1, "likes": 100, "viewCount": 5},
-                400,
-                {
-                    "result": {
-                        "message": "viewCount должно быть >= likes",
-                        "messages": {}
-                    },
-                    "status": "400"
-                }
+                400
         ),
         # Поле viewCount <= contacts (business logic)
         (
@@ -240,14 +177,7 @@ def test_create_item_positive(
                 "iPhone",
                 40000,
                 {"contacts": 100, "likes": 2, "viewCount": 5},
-                400,
-                {
-                    "result": {
-                        "message": "viewCount должно быть >= contacts",
-                        "messages": {}
-                    },
-                    "status": "400"
-                }
+                400
         ),
         # Поле name пустое
         (
@@ -255,14 +185,7 @@ def test_create_item_positive(
                 "",
                 40000,
                 {"contacts": 1, "likes": 2, "viewCount": 5},
-                400,
-                {
-                    "result": {
-                        "message": "поле name обязательно",
-                        "messages": {}
-                    },
-                    "status": "400"
-                }
+                400
         ),
         # Поле name None
         (
@@ -270,14 +193,7 @@ def test_create_item_positive(
                 None,
                 40000,
                 {"contacts": 1, "likes": 2, "viewCount": 5},
-                400,
-                {
-                    "result": {
-                        "message": "поле name обязательно",
-                        "messages": {}
-                    },
-                    "status": "400"
-                }
+                400
         ),
         # Поле price слишком большое
         (
@@ -285,14 +201,7 @@ def test_create_item_positive(
                 "iPhone",
                 4000000000000000000000,
                 {"contacts": 1, "likes": 2, "viewCount": 5},
-                400,
-                {
-                    "result": {
-                        "message": "поле price выходит за границы допустимого",
-                        "messages": {}
-                    },
-                    "status": "400"
-                }
+                400
         )
     ],
     ids=[
@@ -317,8 +226,7 @@ def test_create_item_negative(
         name,
         price,
         statistics,
-        expected_status,
-        expected_response
+        expected_status
 ):
     response = client.create_item(
         seller_id=seller_id,
